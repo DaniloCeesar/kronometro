@@ -91,7 +91,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tailwindcss -i src/css/tailwind.css -o dist/style.css --minify && uglifyjs --compress --mangle -- src/js/scripts.js > dist/scripts.js"
+    "build": "mkdir -p dist && cp -R public/* dist/ && tailwindcss -i src/css/tailwind.css -o dist/style.css --minify && uglifyjs --compress --mangle -- src/js/scripts.js > dist/scripts.js"
   },
   "repository": {
     "type": "git",
