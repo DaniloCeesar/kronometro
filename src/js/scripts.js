@@ -18,7 +18,7 @@ function app() {
         metas: JSON.parse(localStorage.getItem('metas') || '[]'),
 
         temporizador: {
-            version: "1.0.0",
+            version: "1.1.0",
         
             regular: 25,
             shortBreak: 5,
@@ -35,7 +35,9 @@ function app() {
             
             initialMode: "regular",
             currentMode: null,
-            currentTime: 0,        
+            currentTime: 0,
+
+            soundNotify: true,
         },
 
         // Inicia o temporizador
@@ -81,7 +83,9 @@ function app() {
                     default:
                         // Após chegar a 0, passa ao próximo modo
                         if ( segundos <= 0 ) {
-                            clearInterval(intervalo); // Cancela as iterações
+                            this.playAudioNotification(); // Reproduz efeito sonoro
+
+                            clearInterval(intervalo); // Cancela as iterações                            
                             
                             // Se finalizaram todos os `shortBreakSession`s, inicia o modo `longBreak`;
                             // se não, inicia outro modo `shortBreak`.
@@ -102,7 +106,9 @@ function app() {
                     case 'shortBreak':                        
                         // Após chegar a 0, passa ao próximo modo
                         if ( segundos <= 0 ) {
-                            clearInterval(intervalo); // Cancela as iterações
+                            this.playAudioNotification(); // Reproduz efeito sonoro
+
+                            clearInterval(intervalo); // Cancela as iterações                            
 
                             this.startTimer("regular"); // Inicia o modo `regular`
                         }
@@ -111,6 +117,8 @@ function app() {
                     case 'longBreak':
                         // Após chegar a 0, passa ao próximo modo
                         if ( segundos <= 0 ) {
+                            this.playAudioNotification(); // Reproduz efeito sonoro
+
                             clearInterval(intervalo); // Cancela as iterações                            
 
                             if ( this.temporizador["autoRestart"] ) {
@@ -152,7 +160,16 @@ function app() {
                     "shortBreak": "Intervalo curto",
                     "longBreak": "Intervalo longo"
                 }[this.temporizador.currentMode];
-        },        
+        },
+
+        // Reproduz efeito sonoro
+        // @FIX: Apenas se a respectiva configuração estiver ativa
+        playAudioNotification() {
+            if ( this.temporizador.soundNotify == true ) {
+                const audio = new Audio("/assets/notification.wav");
+                audio.play();
+            }
+        },          
         
         // Inicializa a aplicação
         init() {}
